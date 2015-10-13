@@ -16,7 +16,7 @@ describe "Static pages" do
 
     describe "for signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
-      before do
+      before(:each) do
         FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
         FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
         sign_in user
@@ -27,6 +27,10 @@ describe "Static pages" do
         user.feed.each do |item|
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
+      end
+
+      it "should render the user's feed count" do
+        expect(page).to have_content("micropost".pluralize(user.feed.count))
       end
     end
   end
